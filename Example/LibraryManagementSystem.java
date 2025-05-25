@@ -1,5 +1,7 @@
 // Radable interface - Defines a contract with a read() method. The Book class implements this interface, ensuring that all books provide a reading behavior.
 
+import java.util.*;
+
 interface Readable {
     void read();
 }
@@ -52,6 +54,7 @@ class EBook extends Book {
 
 class Library {
     String name;
+    List<Book> books = new ArrayList<>();
 
     Library(String name) {
         this.name = name;
@@ -77,13 +80,51 @@ class Reader {
 
 class ReadingClub {
     String name;
+    List<Reader> readers = new ArrayList<>();
+    List<Book> books = new ArrayList<>();
 
     ReadingClub(String name) {
         this.name = name;
     }
 
     void addReader(Reader reader) {
+        readers.add(reader);
         System.out.println("Adding reader: " + reader.name + " to reading club: " + name);
+    }
+
+    void addBook(Book book) {
+        books.add(book);
+        System.out.println("Adding book: " + book.title + " to reading club: " + name);
+    }
+
+    void listReaders() {
+        System.out.println("Reading club: " + name + " has the following readers:");
+        for (Reader reader : readers) {
+            System.out.println("- " + reader.name);
+        }
+    }
+
+    void listBooks() {
+        System.out.println("Reading club: " + name + " has the following books:");
+        for (Book book : books) {
+            System.out.println("- " + book.title + " by " + book.author.name);
+        }
+    }
+}
+
+class ReadingClubManager {
+    private List<ReadingClub> clubs = new ArrayList<>();
+
+    void addClub(ReadingClub club) {
+        clubs.add(club);
+        System.out.println("Added reading club: " + club.name);
+    }
+
+    void listClubs() {
+        System.out.println("Available reading clubs:");
+        for (ReadingClub club : clubs) {
+            System.out.println("- " + club.name);
+        }
     }
 }
 
@@ -101,7 +142,19 @@ public class LibraryManagementSystem {
         reader.readBook(book);
         reader.readBook(eBook);
 
-        ReadingClub readingClub = new ReadingClub("Fantasy Readers Club");
-        readingClub.addReader(reader);
+        ReadingClubManager clubManager = new ReadingClubManager();
+
+        ReadingClub fantasyClub = new ReadingClub("Fantasy Readers Club");
+        clubManager.addClub(fantasyClub);
+        fantasyClub.addReader(reader);
+        fantasyClub.addBook(book);
+        fantasyClub.listReaders();
+
+        ReadingClub scienceClub = new ReadingClub("Science Fiction Club");
+        clubManager.addClub(scienceClub);
+        scienceClub.addBook(eBook);
+        scienceClub.addReader(new Reader("Bob"));
+        scienceClub.addReader(new Reader("Charlie"));
+        scienceClub.listBooks();
     }
 }
